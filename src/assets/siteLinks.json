@@ -2,22 +2,22 @@
   {
     "icon": "Blog",
     "name": "博客",
-    "link": "https://blog.imsyy.top/"
+    "link": "https://blog.jerryfage.top/"
   },
   {
     "icon": "Cloud",
     "name": "网盘",
-    "link": "https://pan.imsyy.top/"
+    "link": "https://pan.jerryfage.top/"
   },
   {
     "icon": "CompactDisc",
     "name": "音乐",
-    "link": "https://music.imsyy.top/"
+    "link": "https://music.jerryfage.top/"
   },
   {
     "icon": "Compass",
     "name": "起始页",
-    "link": "https://nav.imsyy.top/"
+    "link": "https://limestart.cn/"
   },
   {
     "icon": "Book",
@@ -32,6 +32,11 @@
   {
     "icon": "LaptopCode",
     "name": "站点监测",
-    "link": "https://status.imsyy.top/"
+    "link": "https://stats.uptimerobot.com/5zQk3hMG51"
+  },
+  {
+    "icon": "Flask",
+    "name": "实验室",
+    "link": "https://chatgpt.jerryfage.top/"
   }
 ]
