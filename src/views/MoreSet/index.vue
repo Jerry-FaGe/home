@@ -93,6 +93,7 @@ const upData = reactive({
     "音乐播放器支持音量控制",
   ],
   fix: [
+    "修复主页及设置页域名可能被裁切",
     "修复天气 API",
     "时光胶囊显示错误",
     "移动端动画及细节",
@@ -156,6 +157,7 @@ const jumpTo = (url) => {
 
         .bg {
           font-size: 5rem;
+          padding-left: 1.2rem;
         }
 
         .sm {
