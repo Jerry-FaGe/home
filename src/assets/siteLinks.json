@@ -20,14 +20,14 @@
     "link": "https://limestart.cn/"
   },
   {
-    "icon": "Book",
-    "name": "网址集",
-    "link": "https://web.imsyy.top/"
+    "icon": "CalendarCheck",
+    "name": "签到框架",
+    "link": "https://qiandao.jerryfage.top/"
   },
   {
-    "icon": "Fire",
-    "name": "今日热榜",
-    "link": "https://hot.imsyy.top/"
+    "icon": "Robot",
+    "name": "ChatGPT",
+    "link": "https://mygpt.jerryfage.top/"
   },
   {
     "icon": "LaptopCode",
@@ -35,8 +35,13 @@
     "link": "https://stats.uptimerobot.com/5zQk3hMG51"
   },
   {
+    "icon": "Fire",
+    "name": "今日热榜",
+    "link": "https://hot.imsyy.top/"
+  },
+  {
     "icon": "Flask",
     "name": "实验室",
-    "link": "https://chatgpt.jerryfage.top/"
+    "link": "https://aidraw.jerryfage.top/"
   }
 ]

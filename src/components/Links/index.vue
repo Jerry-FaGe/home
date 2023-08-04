@@ -57,6 +57,9 @@ import {
   Book,
   Fire,
   LaptopCode,
+  Flask,
+  CalendarCheck,
+  Robot,
 } from "@vicons/fa";
 import { mainStore } from "@/store";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -86,6 +89,9 @@ const siteIcon = {
   Book,
   Fire,
   LaptopCode,
+  Flask,
+  CalendarCheck,
+  Robot,
 };
 
 // 链接跳转
