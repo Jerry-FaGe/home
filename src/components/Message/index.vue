@@ -92,12 +92,13 @@ watch(
     .name {
       width: 100%;
       height: 142px;
-      margin-left: 12px;
-      transform: translateY(-8px);
+      // margin-left: 12px;
+      transform: translateY(-15px);
       font-family: "Pacifico-Regular";
 
       .bg {
         font-size: 5rem;
+        padding-left: 1.2rem;
       }
 
       .sm {
