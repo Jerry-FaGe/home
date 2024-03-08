@@ -7,6 +7,7 @@ import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import viteCompression from "vite-plugin-compression";
+import { createHtmlPlugin } from 'vite-plugin-html';
 
 // https://vitejs.dev/config/
 export default ({ mode }) =>
@@ -19,6 +20,20 @@ export default ({ mode }) =>
       }),
       Components({
         resolvers: [ElementPlusResolver()],
+      }),
+      createHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            logo: loadEnv(mode, process.cwd()).VITE_SITE_LOGO,
+            appleLogo: loadEnv(mode, process.cwd()).VITE_SITE_APPLE_LOGO,
+            title: loadEnv(mode, process.cwd()).VITE_SITE_NAME,
+            author: loadEnv(mode, process.cwd()).VITE_SITE_ANTHOR,
+            keywords: loadEnv(mode, process.cwd()).VITE_SITE_KEYWORDS,
+            description: loadEnv(mode, process.cwd()).VITE_SITE_DES,
+            tongji: loadEnv(mode, process.cwd()).VITE_SITE_BAIDUTONGJI,
+          },
+        },
       }),
       VitePWA({
         registerType: "autoUpdate",

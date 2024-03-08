@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="%VITE_SITE_LOGO%">
     <link rel="apple-touch-icon" href="%VITE_SITE_APPLE_LOGO%" />
-    <link rel="bookmark" href="<%- appleLogo %>" />
+    <link rel="bookmark" href="%VITE_SITE_APPLE_LOGO%" />
     <link rel="apple-touch-icon-precomposed" sizes="200x200" href="%VITE_SITE_APPLE_LOGO%" />
     <meta name="description" content="%VITE_SITE_DES%" />
     <meta name="keywords" content="%VITE_SITE_KEYWORDS%" />
@@ -27,16 +27,16 @@
           encodeURIComponent(window.location.href);
     </script>
     <% if (tongji) { %>
-    <!-- 百度统计 -->
-    <script>
-      var _hmt = _hmt || [];
-      (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?<%- tongji %>";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-      })();
-    </script>
+      <!-- 百度统计 -->
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?<%= tongji %>";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
     <% } %>
   </head>
 
