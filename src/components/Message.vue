@@ -4,7 +4,7 @@
     <!-- Logo -->
     <div class="logo">
       <img class="logo-img" :src="siteLogo" alt="logo" />
-      <div :class="{ name: true, 'text-hidden': true, long: siteUrl[0].length >= 6 }">
+      <div :class="{ name: true, 'text-hidden': siteUrl[0].length >= 10, long: siteUrl[0].length >= 6 }">
         <span class="bg">{{ siteUrl[0] }}</span>
         <span class="sm">.{{ siteUrl[1] }}</span>
       </div>
@@ -99,14 +99,12 @@ watch(
     }
     .name {
       width: 100%;
-      height: 142px;
-      // margin-left: 12px;
-      transform: translateY(-15px);
+      padding-left: 22px;
+      transform: translateY(-20px);
       font-family: "Pacifico-Regular";
 
       .bg {
         font-size: 5rem;
-        padding-left: 1.2rem;
       }
 
       .sm {
