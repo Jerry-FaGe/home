@@ -39,7 +39,7 @@
 <script setup>
 import { GithubOne, Bookmark } from "@icon-park/vue-next";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Pagination, Mousewheel } from "swiper";
+import { Pagination, Mousewheel } from "swiper/modules";
 
 // 仓库数据
 const projectData = [
@@ -57,6 +57,16 @@ const projectData = [
     name: "MCDR-BotMono",
     author: "Jerry-FaGe",
     desc: "适用于MCDR的将输入的英文，中文（甚至拼音）指向同一假人并且提供操作界面和简化指令的插件",
+  },
+  {
+    name: "MC_status_web",
+    author: "Jerry-FaGe",
+    desc: "Flask构建的用于查询MC服务器是否开服以及返回一些服务器信息的web项目",
+  },
+  {
+    name: "MC_status_web",
+    author: "Jerry-FaGe",
+    desc: "Flask构建的用于查询MC服务器是否开服以及返回一些服务器信息的web项目",
   },
   {
     name: "MC_status_web",
@@ -107,14 +117,22 @@ const toGithub = (data) => {
       height: 100%;
     }
     .swiper-pagination {
-      position: static;
-      margin-top: -8px;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       :deep(.swiper-pagination-bullet) {
         background-color: #fff;
-        width: 18px;
+        width: 20px;
         height: 4px;
+        margin: 0 4px;
         border-radius: 4px;
+        opacity: 0.2;
         transition: opacity 0.3s;
+        &.swiper-pagination-bullet-active {
+          opacity: 1;
+        }
         &:hover {
           opacity: 1;
         }
