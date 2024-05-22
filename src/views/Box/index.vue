@@ -33,6 +33,7 @@ import { CloseOne, SettingTwo } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
 import TimeCapsule from "@/components/TimeCapsule.vue";
 import GithubProject from "@/components/GithubProject.vue";
+import MoreContent from "@/components/MoreContent.vue";
 
 const store = mainStore();
 const closeShow = ref(false);
@@ -76,6 +77,8 @@ const closeShow = ref(false);
   }
 
   .content {
+    display: flex;
+    flex-direction: column;
     padding: 30px;
     width: 100%;
     height: 100%;
