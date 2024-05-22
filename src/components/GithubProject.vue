@@ -46,32 +46,32 @@ const projectData = [
   {
     name: "home",
     author: "Jerry-FaGe",
-    desc: "个人主页，我的个人主页，个人主页源码，主页模板，homepage",
+    desc: "🏠 个人主页，我的个人主页，个人主页源码，主页模板，homepage",
   },
   {
     name: "MCDR-BotKikai",
     author: "Jerry-FaGe",
-    desc: "🎉 适用于MCDR的将假人位置朝向等信息存储至列表并提供指令映射，便捷放置，操作界面等功能的插件",
+    desc: "适用于 MCDR 的将假人状态储存插件",
   },
   {
     name: "MCDR-BotMono",
     author: "Jerry-FaGe",
-    desc: "适用于MCDR的将输入的英文，中文（甚至拼音）指向同一假人并且提供操作界面和简化指令的插件",
+    desc: "🤖 适用于 MCDR 的假人名称映射",
   },
   {
     name: "MC_status_web",
     author: "Jerry-FaGe",
-    desc: "Flask构建的用于查询MC服务器是否开服以及返回一些服务器信息的web项目",
+    desc: "🤡 Flask 查询 MC 服务器开服信息项目 ",
   },
   {
-    name: "MC_status_web",
+    name: "Bluetooth_select",
     author: "Jerry-FaGe",
-    desc: "Flask构建的用于查询MC服务器是否开服以及返回一些服务器信息的web项目",
+    desc: "💩 凑数的垃圾项目，早就不能用了",
   },
   {
-    name: "MC_status_web",
+    name: "F-Blog",
     author: "Jerry-FaGe",
-    desc: "Flask构建的用于查询MC服务器是否开服以及返回一些服务器信息的web项目",
+    desc: "💩 初学时写的 Django 博客后端，纯纯黑历史，不建议看，看了高血压",
   },
 ];
 
