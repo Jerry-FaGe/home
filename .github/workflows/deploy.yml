@@ -23,11 +23,12 @@ jobs:
             
             - name: 复制 .env.example
               run: |
-                if (-not (Test-Path .env)) {
-                  Copy-Item .env.example .env
-                } else {
-                  Write-Host ".env file already exists. Skipping the copy step."
-                }
+                if [ ! -f ".env" ]; then
+                  cp .env.example .env
+                  echo ".env file does not exist. Copied .env.example to .env."
+                else
+                  echo ".env file already exists. Skipping the copy step."
+                fi
             
             - name: 安装 pnpm
               run: npm install -g pnpm
