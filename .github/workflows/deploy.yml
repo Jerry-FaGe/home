@@ -14,12 +14,20 @@ jobs:
     
         steps:
             - name: 检查仓库
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4.1.1
         
             - name: 安装 Node.js
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4.0.0
               with:
-                node-version: 16.x
+                node-version: 18.x
+            
+            - name: 复制 .env.example
+              run: |
+                if (-not (Test-Path .env)) {
+                  Copy-Item .env.example .env
+                } else {
+                  Write-Host ".env file already exists. Skipping the copy step."
+                }
             
             - name: 安装 pnpm
               run: npm install -g pnpm
