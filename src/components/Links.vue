@@ -55,6 +55,7 @@ import {
   Flask,
   CalendarCheck,
   Robot,
+  Comments,
 } from "@vicons/fa"; // 注意使用正确的类别
 import { mainStore } from "@/store";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -85,6 +86,7 @@ const siteIcon = {
   Flask,
   CalendarCheck,
   Robot,
+  Comments,
 };
 
 // 链接跳转
