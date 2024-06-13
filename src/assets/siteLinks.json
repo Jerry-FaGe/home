@@ -15,9 +15,9 @@
     "link": "https://music.jerryfage.top/"
   },
   {
-    "icon": "Compass",
-    "name": "起始页",
-    "link": "https://limestart.cn/"
+    "icon": "Comments",
+    "name": "聊天室",
+    "link": "https://chat.jerryfage.top/"
   },
   {
     "icon": "CalendarCheck",
@@ -33,6 +33,11 @@
     "icon": "LaptopCode",
     "name": "站点监测",
     "link": "https://stats.uptimerobot.com/5zQk3hMG51"
+  },
+  {
+    "icon": "Compass",
+    "name": "起始页",
+    "link": "https://limestart.cn/"
   },
   {
     "icon": "Fire",
