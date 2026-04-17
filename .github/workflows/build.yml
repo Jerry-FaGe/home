@@ -1,12 +1,8 @@
-# Dev 分支推送部署预览
-## 仅部署 Win 端
+# 手动构建产物
 name: Build Dev
 
 on:
-  push:
-    branches:
-      - dev
-      - master
+  workflow_dispatch:
 
 jobs:
   release:
@@ -16,10 +12,10 @@ jobs:
     steps:
       # 检出 Git 仓库
       - name: Check out git repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v5
       # 安装 Node.js
       - name: Install Node.js
-        uses: actions/setup-node@v4.0.0
+        uses: actions/setup-node@v5
         with:
           node-version: "18.x"
       # 复制环境变量文件
