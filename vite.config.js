@@ -28,7 +28,7 @@ export default ({ mode }) =>
             logo: loadEnv(mode, process.cwd()).VITE_SITE_LOGO,
             appleLogo: loadEnv(mode, process.cwd()).VITE_SITE_APPLE_LOGO,
             title: loadEnv(mode, process.cwd()).VITE_SITE_NAME,
-            author: loadEnv(mode, process.cwd()).VITE_SITE_ANTHOR,
+            author: loadEnv(mode, process.cwd()).VITE_SITE_AUTHOR,
             keywords: loadEnv(mode, process.cwd()).VITE_SITE_KEYWORDS,
             description: loadEnv(mode, process.cwd()).VITE_SITE_DES,
             tongji: loadEnv(mode, process.cwd()).VITE_SITE_BAIDUTONGJI,
