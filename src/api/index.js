@@ -53,23 +53,42 @@ export const getHitokoto = async () => {
  * 天气
  */
 
-// 获取高德地理位置信息
-export const getAdcode = async (key) => {
-  const res = await fetch(`https://restapi.amap.com/v3/ip?key=${key}`);
-  return await res.json();
+const qweatherApiKey = import.meta.env.VITE_QWEATHER_KEY;
+const qweatherWeatherHost = (import.meta.env.VITE_QWEATHER_WEATHER_HOST || "https://devapi.qweather.com").replace(/\/$/, "");
+const qweatherGeoHost = (import.meta.env.VITE_QWEATHER_GEO_HOST || "https://geoapi.qweather.com").replace(/\/$/, "");
+
+const getQWeatherHeaders = () => {
+  if (!qweatherApiKey) {
+    throw new Error("未配置和风天气 API Key");
+  }
+  return {
+    "X-QW-Api-Key": qweatherApiKey,
+  };
 };
 
-// 获取高德地理天气信息
-export const getWeather = async (key, city) => {
+// 根据经纬度获取地区信息
+export const getQWeatherGeo = async (longitude, latitude) => {
   const res = await fetch(
-    `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${city}`,
+    `${qweatherGeoHost}/v2/city/lookup?location=${longitude},${latitude}&number=1`,
+    {
+      headers: getQWeatherHeaders(),
+    },
   );
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok || data.code !== "200") {
+    throw new Error(data?.error?.detail || data?.code || `和风 GeoAPI 请求失败: ${res.status}`);
+  }
+  return data;
 };
 
-// 获取教书先生天气 API
-// https://api.oioweb.cn/doc/weather/GetWeather
-export const getOtherWeather = async () => {
-  const res = await fetch("https://api.oioweb.cn/api/weather/GetWeather");
-  return await res.json();
+// 获取和风实时天气
+export const getQWeatherNow = async (locationId) => {
+  const res = await fetch(`${qweatherWeatherHost}/v7/weather/now?location=${locationId}`, {
+    headers: getQWeatherHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok || data.code !== "200") {
+    throw new Error(data?.error?.detail || data?.code || `和风天气请求失败: ${res.status}`);
+  }
+  return data;
 };

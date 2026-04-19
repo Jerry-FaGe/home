@@ -31,6 +31,12 @@ jobs:
             echo ".env file already exists. Skipping the copy step."
           fi
 
+      - name: 注入和风天气环境变量
+        run: |
+          sed -i "s|^VITE_QWEATHER_KEY = .*|VITE_QWEATHER_KEY = \"${{ secrets.QWEATHER_API_KEY }}\"|" .env
+          sed -i "s|^VITE_QWEATHER_GEO_HOST = .*|VITE_QWEATHER_GEO_HOST = \"${{ secrets.QWEATHER_API_HOST }}\"|" .env
+          sed -i "s|^VITE_QWEATHER_WEATHER_HOST = .*|VITE_QWEATHER_WEATHER_HOST = \"${{ secrets.QWEATHER_API_HOST }}\"|" .env
+
       - name: 安装 pnpm
         run: npm install -g pnpm
 
