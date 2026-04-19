@@ -53,9 +53,24 @@ export const getHitokoto = async () => {
  * 天气
  */
 
+const normalizeQWeatherHost = (host, fallback) => {
+  const value = (host || fallback || "").trim();
+  if (!value) {
+    return fallback;
+  }
+  const withProtocol = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  return withProtocol.replace(/\/$/, "");
+};
+
 const qweatherApiKey = import.meta.env.VITE_QWEATHER_KEY;
-const qweatherWeatherHost = (import.meta.env.VITE_QWEATHER_WEATHER_HOST || "https://devapi.qweather.com").replace(/\/$/, "");
-const qweatherGeoHost = (import.meta.env.VITE_QWEATHER_GEO_HOST || "https://geoapi.qweather.com").replace(/\/$/, "");
+const qweatherWeatherHost = normalizeQWeatherHost(
+  import.meta.env.VITE_QWEATHER_WEATHER_HOST,
+  "https://devapi.qweather.com",
+);
+const qweatherGeoHost = normalizeQWeatherHost(
+  import.meta.env.VITE_QWEATHER_GEO_HOST,
+  "https://geoapi.qweather.com",
+);
 
 const getQWeatherHeaders = () => {
   if (!qweatherApiKey) {

@@ -36,12 +36,21 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
+          
+          def normalize_host(value: str) -> str:
+              value = (value or '').strip()
+              if not value:
+                  return value
+              if value.startswith(('http://', 'https://')):
+                  return value.rstrip('/')
+              return f'https://{value.rstrip("/")}'
+
           path = Path('.env')
           lines = path.read_text().splitlines()
           updates = {
               'VITE_QWEATHER_KEY': os.environ.get('QWEATHER_API_KEY', ''),
-              'VITE_QWEATHER_GEO_HOST': os.environ.get('QWEATHER_API_HOST', ''),
-              'VITE_QWEATHER_WEATHER_HOST': os.environ.get('QWEATHER_API_HOST', ''),
+              'VITE_QWEATHER_GEO_HOST': normalize_host(os.environ.get('QWEATHER_API_HOST', '')),
+              'VITE_QWEATHER_WEATHER_HOST': normalize_host(os.environ.get('QWEATHER_API_HOST', '')),
           }
           for key, value in updates.items():
               replaced = False
