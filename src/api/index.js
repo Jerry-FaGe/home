@@ -84,7 +84,7 @@ const getQWeatherHeaders = () => {
 // 根据经纬度获取地区信息
 export const getQWeatherGeo = async (longitude, latitude) => {
   const res = await fetch(
-    `${qweatherGeoHost}/v2/city/lookup?location=${longitude},${latitude}&number=1`,
+    `${qweatherGeoHost}/geo/v2/city/lookup?location=${longitude},${latitude}&number=1`,
     {
       headers: getQWeatherHeaders(),
     },
