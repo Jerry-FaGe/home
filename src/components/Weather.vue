@@ -33,19 +33,90 @@ const weatherData = reactive({
   },
 });
 
+const GEOLOCATION_ERROR_CODE = {
+  1: "PERMISSION_DENIED",
+  2: "POSITION_UNAVAILABLE",
+  3: "TIMEOUT",
+};
+
+const fetchJsonWithTimeout = async (url, timeout = 5000) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) {
+      throw new Error(`请求失败: ${res.status}`);
+    }
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+// 通过浏览器 Geolocation 获取坐标
+const getBrowserPosition = () =>
+  new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      return reject(new Error("浏览器不支持定位"));
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      reject,
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 10 * 60 * 1000 },
+    );
+  });
+
+// 通过 IP 定位获取粗略坐标，避免默认触发浏览器位置授权
+const getIPPosition = async () => {
+  const providers = [
+    {
+      url: "https://ipinfo.io/json",
+      parse: (data) => {
+        const [lat, lon] = (data.loc || "").split(",").map(Number);
+        return { lat, lon };
+      },
+    },
+    {
+      url: "https://ipapi.co/json/",
+      parse: (data) => ({ lat: Number(data.latitude), lon: Number(data.longitude) }),
+    },
+  ];
+
+  for (const provider of providers) {
+    try {
+      const position = provider.parse(await fetchJsonWithTimeout(provider.url));
+      if (!isNaN(position.lat) && !isNaN(position.lon)) {
+        return position;
+      }
+    } catch (error) {
+      console.warn(`IP 定位服务失败: ${provider.url}`, error);
+    }
+  }
+  throw new Error("IP 定位返回无效数据");
+};
+
 // 获取天气数据
 const getWeatherData = async () => {
   try {
-    const position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 10 * 60 * 1000,
-      });
-    });
+    // 优先 IP 定位，只有 IP 定位不可用时才触发浏览器定位授权
+    let position;
+    try {
+      position = await getIPPosition();
+    } catch (ipErr) {
+      console.warn("IP 定位失败，尝试浏览器定位:", ipErr);
+      try {
+        position = await getBrowserPosition();
+      } catch (geoErr) {
+        console.warn("浏览器定位失败:", {
+          code: GEOLOCATION_ERROR_CODE[geoErr.code] || geoErr.code,
+          message: geoErr.message,
+        });
+        throw geoErr;
+      }
+    }
 
-    const longitude = Number(position.coords.longitude).toFixed(2);
-    const latitude = Number(position.coords.latitude).toFixed(2);
+    const longitude = Number(position.lon).toFixed(2);
+    const latitude = Number(position.lat).toFixed(2);
 
     const geoData = await getQWeatherGeo(longitude, latitude);
     const location = geoData.location?.[0];
