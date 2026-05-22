@@ -88,14 +88,10 @@ onMounted(() => {
   nextTick(() => {
     try {
       getPlayerList(props.songServer, props.songType, props.songId).then((res) => {
-        console.log(res);
         // 更改播放器加载状态
         store.musicIsOk = true;
         // 生成歌单
         playList.value = res;
-        console.log("音乐加载完成");
-        console.log(playList.value);
-        console.log(playIndex.value, playList.value.length, props.volume);
       });
     } catch (err) {
       console.error(err);
@@ -114,7 +110,6 @@ onMounted(() => {
 
 // 播放
 const onPlay = () => {
-  console.log("播放");
   playIndex.value = player.value.aplayer.index;
   // 播放状态
   store.setPlayerState(player.value.audioRef.paused);

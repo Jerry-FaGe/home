@@ -61,7 +61,6 @@ const imgLoadComplete = () => {
 
 // 图片动画完成
 const imgAnimationEnd = () => {
-  console.log("壁纸加载且动画完成");
   // 加载完成事件
   emit("loadComplete");
 };
