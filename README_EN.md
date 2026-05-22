@@ -1,6 +1,6 @@
 English | [简体中文](./README.md)
 
-# Jerry_FaGe Homepage
+# 🏠 Jerry_FaGe Homepage
 
 This is the maintained personal homepage repository for <https://jerryfage.top>.
 
@@ -8,16 +8,16 @@ It is based on [`imsyy/home`](https://github.com/imsyy/home). The upstream repos
 
 ![Jerry_FaGe Homepage](/screenshots/main.jpg)
 
-## What This Fork Maintains
+## 🛠️ What This Fork Maintains
 
-- Site metadata, links, ICP record, and deployment paths for this repository
-- QWeather GeoAPI and real-time weather integration
-- IP-based rough city lookup through IPIP, then QWeather LocationID lookup
-- `.env` removed from version control; sensitive values are injected through GitHub Secrets
-- Cleanup of unused dependencies, unused assets, and temporary tool output
-- Original layout, music player, background switching, time capsule, and mobile experience
+- 🌐 Site metadata, links, ICP record, and deployment paths for this repository
+- 🌦️ QWeather GeoAPI and real-time weather integration
+- 📍 IP-based rough city lookup through IPIP, then QWeather LocationID lookup
+- 🔐 `.env` removed from version control; sensitive values are injected through GitHub Secrets
+- 🧹 Cleanup of unused dependencies, unused assets, and temporary tool output
+- 🎵 Original layout, music player, background switching, time capsule, and mobile experience
 
-## Features
+## ✨ Features
 
 - [x] Loading animation
 - [x] Site profile
@@ -29,7 +29,7 @@ It is based on [`imsyy/home`](https://github.com/imsyy/home). The upstream repos
 - [x] Mobile layout
 - [x] PWA auto update
 
-## Local Development
+## 🚀 Local Development
 
 ```bash
 # Install dependencies
@@ -50,7 +50,7 @@ cp .env.example .env
 
 `.env` is local-only and should not be committed.
 
-## Deployment
+## 📦 Deployment
 
 Production deployment is handled by `.github/workflows/deploy.yml`:
 
@@ -72,7 +72,7 @@ Required GitHub Secrets:
 
 If `QWEATHER_API_KEY` is missing, CI will continue, but live weather may be unavailable.
 
-## Environment Variables
+## ⚙️ Environment Variables
 
 Main configuration is documented in `.env.example`:
 
@@ -94,7 +94,7 @@ Main configuration is documented in `.env.example`:
 | `VITE_SONG_TYPE`             | Playback type                                                 |
 | `VITE_SONG_ID`               | Song or playlist ID                                           |
 
-## Weather
+## 🌦️ Weather
 
 Current weather flow:
 
@@ -113,7 +113,7 @@ VITE_QWEATHER_WEATHER_HOST = ""
 
 It is recommended to restrict the QWeather key to the production domain in the QWeather console.
 
-## Customization
+## 🎨 Customization
 
 ### Site Links
 
@@ -143,6 +143,12 @@ public/images/background1.webp ... background10.webp
 
 If you add more images, update the random range in `src/components/Background.vue`.
 
+### Fonts
+
+The homepage uses local fonts plus remote HarmonyOS Sans. To reduce first-screen loading size, `public/font/Pacifico-Regular.ttf` is a compressed logo font that only covers the characters needed by this site.
+
+If you change the logo text and see missing letters or fallback fonts, replace it with `Pacifico-Regular-all.ttf` from the same directory and recompress it if needed.
+
 ### Music
 
 The music player uses a Meting API endpoint configured in `.env`:
@@ -154,7 +160,7 @@ VITE_SONG_TYPE = "playlist"
 VITE_SONG_ID = "418849509"
 ```
 
-## Tech Stack
+## 🧱 Tech Stack
 
 - [Vue](https://vuejs.org/)
 - [Vite](https://vitejs.dev/)
@@ -165,7 +171,7 @@ VITE_SONG_ID = "418849509"
 - [Swiper](https://swiperjs.com/)
 - [APlayer](https://aplayer.js.org/)
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 Thanks to the upstream project [`imsyy/home`](https://github.com/imsyy/home) for the original homepage design, interactions, and implementation. This repository is a personal maintenance fork based on that project.
 
