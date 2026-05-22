@@ -36,7 +36,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
-          
+
           def normalize_host(value: str) -> str:
               value = (value or '').strip()
               if not value:
@@ -47,11 +47,22 @@ jobs:
 
           path = Path('.env')
           lines = path.read_text().splitlines()
-          updates = {
-              'VITE_QWEATHER_KEY': os.environ.get('QWEATHER_API_KEY', ''),
-              'VITE_QWEATHER_GEO_HOST': normalize_host(os.environ.get('QWEATHER_API_HOST', '')),
-              'VITE_QWEATHER_WEATHER_HOST': normalize_host(os.environ.get('QWEATHER_API_HOST', '')),
-          }
+
+          api_key = os.environ.get('QWEATHER_API_KEY', '').strip()
+          api_host = normalize_host(os.environ.get('QWEATHER_API_HOST', ''))
+
+          if not api_key:
+              print('::warning::Missing GitHub Secret: QWEATHER_API_KEY. Weather may be unavailable after deployment.')
+
+          updates = {}
+          if api_key:
+              updates['VITE_QWEATHER_KEY'] = api_key
+          if api_host:
+              updates.update({
+                  'VITE_QWEATHER_GEO_HOST': api_host,
+                  'VITE_QWEATHER_WEATHER_HOST': api_host,
+              })
+
           for key, value in updates.items():
               replaced = False
               for i, line in enumerate(lines):
