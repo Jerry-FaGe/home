@@ -85,7 +85,7 @@ const getQWeatherHeaders = () => {
 export const getQWeatherGeo = async (location, latitude) => {
   const queryLocation = latitude === undefined ? location : `${location},${latitude}`;
   const res = await fetch(
-    `${qweatherGeoHost}/geo/v2/city/lookup?location=${encodeURIComponent(queryLocation)}&number=1`,
+    `${qweatherGeoHost}/geo/v2/city/lookup?location=${encodeURIComponent(queryLocation)}&number=1&lang=zh`,
     {
       headers: getQWeatherHeaders(),
     },
@@ -99,7 +99,7 @@ export const getQWeatherGeo = async (location, latitude) => {
 
 // 获取和风实时天气
 export const getQWeatherNow = async (locationId) => {
-  const res = await fetch(`${qweatherWeatherHost}/v7/weather/now?location=${locationId}`, {
+  const res = await fetch(`${qweatherWeatherHost}/v7/weather/now?location=${locationId}&lang=zh`, {
     headers: getQWeatherHeaders(),
   });
   const data = await res.json();
