@@ -81,15 +81,17 @@ const getQWeatherHeaders = () => {
   };
 };
 
-// 根据访问 IP、LocationID、城市名或经纬度获取地区信息
-export const getQWeatherGeo = async (location, latitude) => {
+// 根据城市名、LocationID、经纬度或 Adcode 获取地区信息
+export const getQWeatherGeo = async (location, latitude, adm) => {
   const queryLocation = latitude === undefined ? location : `${location},${latitude}`;
-  const res = await fetch(
-    `${qweatherGeoHost}/geo/v2/city/lookup?location=${encodeURIComponent(queryLocation)}&number=1&lang=zh`,
-    {
-      headers: getQWeatherHeaders(),
-    },
-  );
+  const params = new URLSearchParams({ location: queryLocation, number: "1", lang: "zh" });
+  if (adm) {
+    params.set("adm", adm);
+  }
+
+  const res = await fetch(`${qweatherGeoHost}/geo/v2/city/lookup?${params.toString()}`, {
+    headers: getQWeatherHeaders(),
+  });
   const data = await res.json();
   if (!res.ok || data.code !== "200") {
     throw new Error(data?.error?.detail || data?.code || `和风 GeoAPI 请求失败: ${res.status}`);

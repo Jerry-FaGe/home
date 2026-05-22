@@ -39,6 +39,31 @@ const GEOLOCATION_ERROR_CODE = {
   3: "TIMEOUT",
 };
 
+const fetchJsonWithTimeout = async (url, timeout = 5000) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) {
+      throw new Error(`请求失败: ${res.status}`);
+    }
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+// 通过 IPIP 获取粗略城市，避免默认触发浏览器位置授权
+const getIPLocation = async () => {
+  const data = await fetchJsonWithTimeout("https://myip.ipip.net/json");
+  const [country, adm1, city] = data.data?.location || [];
+  const location = city || adm1 || country;
+  if (!location) {
+    throw new Error("IP 定位返回无效数据");
+  }
+  return { location, adm: adm1 };
+};
+
 // 通过浏览器 Geolocation 获取坐标
 const getBrowserPosition = () =>
   new Promise((resolve, reject) => {
@@ -55,10 +80,11 @@ const getBrowserPosition = () =>
 // 获取天气数据
 const getWeatherData = async () => {
   try {
-    // 优先使用和风 GeoAPI 按访问 IP 定位，避免触发浏览器位置授权
+    // 优先使用 IP 粗定位，只有 IP 定位不可用时才触发浏览器定位授权
     let geoData;
     try {
-      geoData = await getQWeatherGeo("auto:ip");
+      const ipLocation = await getIPLocation();
+      geoData = await getQWeatherGeo(ipLocation.location, undefined, ipLocation.adm);
     } catch (ipErr) {
       console.warn("IP 定位失败，尝试浏览器定位:", ipErr);
       let position;
