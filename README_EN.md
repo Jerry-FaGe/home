@@ -1,148 +1,177 @@
-English | [Chinese](./README.md)
+English | [简体中文](./README.md)
 
-> [!IMPORTANT]
-> ## 致大家
-> This project was originally just a simple homepage. However, as more and more friends discovered this project, it received a lot of undue attention. Moreover, as a work of a beginner in front-end development, its code is quite messy and of low quality. In addition, this project has also been resold by many unknown resource or download sites, causing many unsuspecting buyers to find my contact information from the source code to consult on problems or request features. But due to current personal life reasons, and I have never gained any benefits from this project, so I am unable to maintain this project. This repository will not be archived. We will actively accept PRs from all the experts, but no updates will be made for any new features or bugs. Please understand!
+# Jerry_FaGe Homepage
 
-<p>
-<strong><h2>Homepage</h2></strong>
-Simple little homepage, had enough of the original one and made a new one
-</p>
+This is the maintained personal homepage repository for <https://jerryfage.top>.
 
-![無名の主页](https://s2.loli.net/2022/07/14/K5JigfvDoNewtuS.webp)
+It is based on [`imsyy/home`](https://github.com/imsyy/home). The upstream repository has been archived, so this repository is now maintained only for this personal site.
 
->The logo font on the home page has been compressed, so if you use a font other than this logo, it will change back to the default font, Here is the [full font](https://file.4everland.app/font/Other/Pacifico-Regular.ttf)  
+![Jerry_FaGe Homepage](/screenshots/main.jpg)
 
-### Demo
+## What This Fork Maintains
 
->Due to CDN caching, you may need `Ctrl` + `F5` to force a browser cache refresh to see the latest results
+- Site metadata, links, ICP record, and deployment paths for this repository
+- QWeather GeoAPI and real-time weather integration
+- IP-based rough city lookup through IPIP, then QWeather LocationID lookup
+- `.env` removed from version control; sensitive values are injected through GitHub Secrets
+- Cleanup of unused dependencies, unused assets, and temporary tool output
+- Original layout, music player, background switching, time capsule, and mobile experience
 
-- [無名の主页](https://www.imsyy.top)
-- [無名の主页 - Dev](https://home-imsyy.vercel.app)
-- [無名の主页 - Standby](https://home-5iw.pages.dev)
-
-### Functions
+## Features
 
 - [x] Loading animation
-- [x] Site description
-- [x] Hitokoto
+- [x] Site profile
+- [x] Hitokoto quote
 - [x] Date and time
 - [x] Live weather
-- [x] Time progress bar
+- [x] Time capsule
 - [x] Music player
-- [x] Mobile adaptation
+- [x] Mobile layout
+- [x] PWA auto update
 
-* [ ] Player cancels using Aplayer
-
-### Deployment
-
-* **Installation** [node.js](https://nodejs.org/zh-cn/) **Environment**
-
-  > node > 16.16.0  
-  > npm > 8.15.0
-  
-* Then run the `cmd` terminal with **administrator privileges** and `cd` to the project root directory
-* In the `terminal` type:
+## Local Development
 
 ```bash
-# Install pnpm
-npm install -g pnpm
-
-# Install the dependencies
+# Install dependencies
 pnpm install
 
-# Preview
+# Start dev server
 pnpm dev
 
-# Build
+# Build static assets
 pnpm build
 ```
 
-> Once the build is complete, the files in the `dist` folder can be uploaded to the server or imported and automatically deployed with one click using a hosting platform such as `Vercel`.
+Create your local env file from the template:
 
-### Weather
+```bash
+cp .env.example .env
+```
 
-Weather and area access requires `高德开放平台` related API
+`.env` is local-only and should not be committed.
 
-- Go to [高德开放平台控制台](https://console.amap.com/dev/index) to create a `Key` of type `Web Service` and fill the `Key` into `VITE_WEATHER_KEY` in `.env` 
+## Deployment
 
-It can also be replaced by other methods
+Production deployment is handled by `.github/workflows/deploy.yml`:
+
+- Pushes to the `dev` branch trigger the workflow.
+- CI copies `.env.example` to `.env`.
+- Weather credentials are injected from GitHub Secrets.
+- The static build output is uploaded as an artifact.
+- `appleboy/scp-action` deploys the build to `/home/Jerry_FaGe/home` on the server.
+
+Required GitHub Secrets:
+
+| Secret              | Purpose                     | Required    |
+| ------------------- | --------------------------- | ----------- |
+| `SERVER_HOST`       | Deployment server host      | Yes         |
+| `SERVER_USERNAME`   | SSH username                | Yes         |
+| `SSH_PRIVATE_KEY`   | SSH private key             | Yes         |
+| `QWEATHER_API_KEY`  | QWeather API key            | Recommended |
+| `QWEATHER_API_HOST` | Dedicated QWeather API host | Optional    |
+
+If `QWEATHER_API_KEY` is missing, CI will continue, but live weather may be unavailable.
+
+## Environment Variables
+
+Main configuration is documented in `.env.example`:
+
+| Variable                     | Description                                                   |
+| ---------------------------- | ------------------------------------------------------------- |
+| `VITE_SITE_NAME`             | Site title                                                    |
+| `VITE_SITE_AUTHOR`           | Site author                                                   |
+| `VITE_SITE_KEYWORDS`         | SEO keywords                                                  |
+| `VITE_SITE_DES`              | Site description                                              |
+| `VITE_SITE_URL`              | Site domain                                                   |
+| `VITE_SITE_BAIDUTONGJI`      | Baidu Analytics ID; leave empty to disable injection          |
+| `VITE_QWEATHER_KEY`          | QWeather API key for local development; CI injects the Secret |
+| `VITE_QWEATHER_GEO_HOST`     | QWeather GeoAPI host                                          |
+| `VITE_QWEATHER_WEATHER_HOST` | QWeather real-time weather API host                           |
+| `VITE_SITE_START`            | Site start date                                               |
+| `VITE_SITE_ICP`              | ICP record number                                             |
+| `VITE_SONG_API`              | Meting API endpoint                                           |
+| `VITE_SONG_SERVER`           | Music provider                                                |
+| `VITE_SONG_TYPE`             | Playback type                                                 |
+| `VITE_SONG_ID`               | Song or playlist ID                                           |
+
+## Weather
+
+Current weather flow:
+
+1. Fetch rough IP location from `https://myip.ipip.net/json`.
+2. Query QWeather GeoAPI with city and province to get LocationID.
+3. Query QWeather real-time weather by LocationID.
+4. If IP lookup fails, fall back to browser Geolocation.
+
+QWeather configuration:
+
+```bash
+VITE_QWEATHER_KEY = ""
+VITE_QWEATHER_GEO_HOST = ""
+VITE_QWEATHER_WEATHER_HOST = ""
+```
+
+It is recommended to restrict the QWeather key to the production domain in the QWeather console.
+
+## Customization
+
+### Site Links
+
+Edit:
+
+```text
+src/assets/siteLinks.json
+```
+
+Icons come from `@vicons/fa`. To add a new icon, import it in `src/components/Links.vue` and register it in the `siteIcon` map.
+
+### Social Links
+
+Edit:
+
+```text
+src/assets/socialLinks.json
+```
+
+### Background Images
+
+Local backgrounds are stored as:
+
+```text
+public/images/background1.webp ... background10.webp
+```
+
+If you add more images, update the random range in `src/components/Background.vue`.
 
 ### Music
 
->This project uses the `Aplayer` music player based on `MetingJS` for quick song list customization  
->*Only supported in **Mainland China**
-
-Please change the song related parameters in the `.env` file to customize the song list
+The music player uses a Meting API endpoint configured in `.env`:
 
 ```bash
-# Songs API address
-VITE_SONG_API = "https://api-meting.imsyy.top"
-# Song server ( netease-netease, tencent-qq music )
+VITE_SONG_API = "https://meting-api-omega.vercel.app/api"
 VITE_SONG_SERVER = "netease"
-# Playback type ( song-song, playlist-playlist, album-album, search-search, artist-artist )
 VITE_SONG_TYPE = "playlist"
-# Playback ID
-VITE_SONG_ID = "7452421335"
+VITE_SONG_ID = "418849509"
 ```
 
-### Fonts
+## Tech Stack
 
-Now using `HarmonyOS Sans` open source font, using font splitting to improve loading speed
+- [Vue](https://vuejs.org/)
+- [Vite](https://vitejs.dev/)
+- [Pinia](https://pinia.vuejs.org/)
+- [Element Plus](https://element-plus.org/)
+- [IconPark](https://iconpark.oceanengine.com/official)
+- [xicons](https://xicons.org/)
+- [Swiper](https://swiperjs.com/)
+- [APlayer](https://aplayer.js.org/)
 
->Because this site's `CDN` has opened anti-leech, **non-site domain name is not accessible**, please change the font import link to the following content, otherwise **custom fonts will be invalid**
->
->`https://cdn.jsdelivr.net/gh/imsyy/file/font/HarmonyOS_Sans/regular.min.css`
+## Acknowledgements
 
-<details>
-<summary>old way</summary>
+Thanks to the upstream project [`imsyy/home`](https://github.com/imsyy/home) for the original homepage design, interactions, and implementation. This repository is a personal maintenance fork based on that project.
 
->As Chinese fonts are introduced in this project, Chinese fonts need to be compressed to improve the loading speed of the page (you can also cancel the use of Chinese fonts)
+Thanks also to:
 
-#### Chinese font removal traditional
-
-- Install `Python 3.7` and `pip`
-- Run `pip install fonttools`
-- Download [sc_unicode.txt](https://gist.githubusercontent.com/imaegoo/d64e5088b723c2e02c40985f55ff12db/raw/5ebd2ce49418c73459a9dfe050483409306a6c1d/sc_unicode.txt)
-- Run `pyftsubset font-name.ttf --unicodes-file=sc_unicode.txt`
-
-#### fonts further compressed
-
-- Compile and install ``Google woff2``
-
-```bash
-sudo apt-get install -y git g++ make
-git clone --recursive https://github.com/google/woff2.git
-cd woff2
-make clean all
-```
-
-- Compress the font again
-
-```
-. /woff2_compress . /font_name.ttf
-```
-
-- Eventually the original font can be slow loaded, **load the compressed font first**
-
->For more information, please go to [虹墨空间站](https://www.imaegoo.com/2020/chinese-font-compress/) to view the original article
-
-</details>
-
-### Technology Stack
-
-* [Vue](https://cn.vuejs.org/)
-* [Vite](https://vitejs.cn/vite3-cn/)
-* [Pinia](https://pinia.vuejs.org/zh/)
-* [IconPark](https://iconpark.oceanengine.com/official)
-* [xicons](https://xicons.org/)
-* [Aplayer](https://aplayer.js.org/)
-
-### API
-
-* [韩小韩 WebAPI 接口](https://api.vvhan.com/)
-* [搏天 API](https://api.btstu.cn/doc/sjbz.php)
-* [高德开放平台](https://lbs.amap.com/)
-* [Hitokoto 一言](https://hitokoto.cn/)
-
-<a title="SSL" target="_blank" href="https://myssl.com/seal/detail?domain=blog.imsyy.top"><img src="https://img.shields.io/badge/MySSL-安全认证-brightgreen"></a>&nbsp;<a title="CDN" target="_blank" href="https://cdnjs.com/"><img src="https://img.shields.io/badge/CDN-Cloudflare-blue"></a>&nbsp;<a title="Copyright" target="_blank" href="https://imsyy.top/"><img src="https://img.shields.io/badge/Copyright%20%C2%A9%202020--2023-%E7%84%A1%E5%90%8D-red"></a>
+- [QWeather](https://dev.qweather.com/)
+- [IPIP](https://www.ipip.net/)
+- [Hitokoto](https://hitokoto.cn/)
+- [Meting API](https://github.com/xizeyoupan/Meting-API)
