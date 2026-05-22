@@ -81,10 +81,11 @@ const getQWeatherHeaders = () => {
   };
 };
 
-// 根据经纬度获取地区信息
-export const getQWeatherGeo = async (longitude, latitude) => {
+// 根据访问 IP、LocationID、城市名或经纬度获取地区信息
+export const getQWeatherGeo = async (location, latitude) => {
+  const queryLocation = latitude === undefined ? location : `${location},${latitude}`;
   const res = await fetch(
-    `${qweatherGeoHost}/geo/v2/city/lookup?location=${longitude},${latitude}&number=1`,
+    `${qweatherGeoHost}/geo/v2/city/lookup?location=${encodeURIComponent(queryLocation)}&number=1`,
     {
       headers: getQWeatherHeaders(),
     },

@@ -19,7 +19,7 @@
 
 <script setup>
 import { getQWeatherGeo, getQWeatherNow } from "@/api";
-import { Error } from "@icon-park/vue-next";
+import { Error as ErrorIcon } from "@icon-park/vue-next";
 
 // 天气数据
 const weatherData = reactive({
@@ -39,20 +39,6 @@ const GEOLOCATION_ERROR_CODE = {
   3: "TIMEOUT",
 };
 
-const fetchJsonWithTimeout = async (url, timeout = 5000) => {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
-  try {
-    const res = await fetch(url, { signal: controller.signal });
-    if (!res.ok) {
-      throw new Error(`请求失败: ${res.status}`);
-    }
-    return await res.json();
-  } finally {
-    clearTimeout(timer);
-  }
-};
-
 // 通过浏览器 Geolocation 获取坐标
 const getBrowserPosition = () =>
   new Promise((resolve, reject) => {
@@ -66,44 +52,16 @@ const getBrowserPosition = () =>
     );
   });
 
-// 通过 IP 定位获取粗略坐标，避免默认触发浏览器位置授权
-const getIPPosition = async () => {
-  const providers = [
-    {
-      url: "https://ipinfo.io/json",
-      parse: (data) => {
-        const [lat, lon] = (data.loc || "").split(",").map(Number);
-        return { lat, lon };
-      },
-    },
-    {
-      url: "https://ipapi.co/json/",
-      parse: (data) => ({ lat: Number(data.latitude), lon: Number(data.longitude) }),
-    },
-  ];
-
-  for (const provider of providers) {
-    try {
-      const position = provider.parse(await fetchJsonWithTimeout(provider.url));
-      if (!isNaN(position.lat) && !isNaN(position.lon)) {
-        return position;
-      }
-    } catch (error) {
-      console.warn(`IP 定位服务失败: ${provider.url}`, error);
-    }
-  }
-  throw new Error("IP 定位返回无效数据");
-};
-
 // 获取天气数据
 const getWeatherData = async () => {
   try {
-    // 优先 IP 定位，只有 IP 定位不可用时才触发浏览器定位授权
-    let position;
+    // 优先使用和风 GeoAPI 按访问 IP 定位，避免触发浏览器位置授权
+    let geoData;
     try {
-      position = await getIPPosition();
+      geoData = await getQWeatherGeo("auto:ip");
     } catch (ipErr) {
       console.warn("IP 定位失败，尝试浏览器定位:", ipErr);
+      let position;
       try {
         position = await getBrowserPosition();
       } catch (geoErr) {
@@ -113,12 +71,11 @@ const getWeatherData = async () => {
         });
         throw geoErr;
       }
+      const longitude = Number(position.lon).toFixed(2);
+      const latitude = Number(position.lat).toFixed(2);
+      geoData = await getQWeatherGeo(`${longitude},${latitude}`);
     }
 
-    const longitude = Number(position.lon).toFixed(2);
-    const latitude = Number(position.lat).toFixed(2);
-
-    const geoData = await getQWeatherGeo(longitude, latitude);
     const location = geoData.location?.[0];
     if (!location?.id) {
       throw new Error("地区查询失败");
@@ -149,7 +106,7 @@ const getWeatherData = async () => {
 const onError = (message) => {
   ElMessage({
     message,
-    icon: h(Error, {
+    icon: h(ErrorIcon, {
       theme: "filled",
       fill: "#efefef",
     }),
