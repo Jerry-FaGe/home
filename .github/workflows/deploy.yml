@@ -1,5 +1,9 @@
 name: 编译并部署
 
+concurrency:
+  group: homepage-production-deploy
+  cancel-in-progress: false
+
 on:
   push:
     branches:
@@ -98,6 +102,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
+    env:
+      RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+
     steps:
       - name: 下载构建产物
         uses: actions/download-artifact@v8
@@ -105,12 +112,65 @@ jobs:
           name: deploy-dist
           path: dist
 
-      - name: 部署到服务器
-        uses: appleboy/scp-action@master
+      - name: 创建版本目录
+        uses: appleboy/ssh-action@v1
+        env:
+          RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: RELEASE_ID
+          script: |
+            set -eu
+            mkdir -p "/srv/www/jerryfage.top/releases/$RELEASE_ID"
+
+      - name: 上传构建产物
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: dist/*
-          target: /home/Jerry_FaGe/home
+          target: /srv/www/jerryfage.top/releases/${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           strip_components: 1
+
+      - name: 切换线上版本并清理旧版本
+        uses: appleboy/ssh-action@v1
+        env:
+          RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: RELEASE_ID
+          script: |
+            set -eu
+
+            base='/srv/www/jerryfage.top'
+            release="$base/releases/$RELEASE_ID"
+
+            # 上传不完整时禁止切换
+            test -s "$release/index.html"
+
+            # 统一静态文件和目录权限
+            find "$release" -type d -exec chmod 0755 {} +
+            find "$release" -type f -exec chmod 0644 {} +
+
+            # 原子替换当前版本链接
+            ln -s "$release" "$base/.current-$RELEASE_ID"
+            mv -Tf "$base/.current-$RELEASE_ID" "$base/current"
+
+            # 保留最近 5 个版本
+            current="$(readlink -f "$base/current")"
+            find "$base/releases" -mindepth 1 -maxdepth 1 \
+              -type d -printf '%T@ %p\n' |
+              sort -nr |
+              tail -n +6 |
+              cut -d' ' -f2- |
+              while IFS= read -r old_release; do
+                [ "$old_release" = "$current" ] ||
+                  rm -rf -- "$old_release"
+              done
+
+            echo "Activated release: $RELEASE_ID"
