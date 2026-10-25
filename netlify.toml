@@ -1,0 +1,3 @@
+[build]
+  command = "cp .env.example .env && pnpm run build"
+  publish = "dist"
